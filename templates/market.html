@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Marketplace{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy"><div class="eyebrow"><span class="pulse"></span> THE HACKMART MARKETPLACE</div><h1>Good tech.<br><span>Better prices.</span></h1><p>Tools and gear for your everyday setup. Browse the collection and spend your wallet credits wisely.</p><a class="button button-primary" href="#products">Explore products <span>↘</span></a></div>
+  <div class="hero-art"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="hero-chip chip-a">HM / 026</div><div class="hero-device"><div class="device-screen"><span>H</span><small>SMART SHOPPING</small></div><div class="device-base"></div></div><div class="hero-chip chip-b">TECH FOR ALL</div></div>
+</section>
+<div class="section-heading" id="products"><div><div class="eyebrow">CURATED COLLECTION</div><h2>Shop the essentials</h2></div><span class="muted">{{ products_count }} items · Page {{ page }} of {{ max_page }}</span></div>
+<div class="product-grid">
+{% for product in products %}
+  <article class="product-card">
+    <a class="product-visual {% if product.id == 'flag' %}flag-visual{% endif %}" href="{{ url_for('product_detail', product_id=product.id) }}">
+      {% if product.image %}<img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">{% else %}<div class="flag-lock"><span>✦</span><strong>RESTRICTED</strong><small>NO PREVIEW AVAILABLE</small></div>{% endif %}
+      <span class="category-tag">{{ product.category }}</span>
+    </a>
+    <div class="product-info"><div><a class="product-name" href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a><p>{{ product.description }}</p></div>
+      <div class="product-bottom"><strong>₹{{ product.price }}</strong><form method="post" action="{{ url_for('buy_product', product_id=product.id) }}"><button class="buy-button" type="submit" aria-label="Buy {{ product.name }}">Buy <span>↗</span></button></form></div>
+    </div>
+  </article>
+{% endfor %}
+</div>
+<div class="pagination">
+  {% if page > 1 %}<a class="page-link" href="{{ url_for('marketplace', page=page-1) }}">← Previous</a>{% else %}<span></span>{% endif %}
+  <div class="page-numbers">{% for n in range(1, max_page+1) %}<a class="page-number {% if n == page %}active{% endif %}" href="{{ url_for('marketplace', page=n) }}">{{ n }}</a>{% endfor %}</div>
+  {% if page < max_page %}<a class="page-link" href="{{ url_for('marketplace', page=page+1) }}">Next →</a>{% else %}<span></span>{% endif %}
+</div>
+{% endblock %}

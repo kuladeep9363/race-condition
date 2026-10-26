@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}HackMart{% endblock %} · HackMart</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="{{ url_for('marketplace') }}"><span class="brand-mark">H</span><span>hack<span class="brand-accent">mart</span><small>THE EVERYDAY TECH MARKET</small></span></a>
+  <nav class="nav">
+    <a href="{{ url_for('marketplace') }}">Marketplace</a>
+    {% if current_user %}
+      <a href="{{ url_for('coupon') }}">Coupons</a>
+      <a href="{{ url_for('wallet') }}">My account</a>
+      <span class="wallet-pill">₹{{ current_user.wallet }}</span>
+      <form method="post" action="{{ url_for('logout') }}"><button class="nav-logout" type="submit">Log out</button></form>
+    {% else %}
+      <a href="{{ url_for('login') }}">Log in</a>
+      <a class="nav-cta" href="{{ url_for('register') }}">Create account</a>
+    {% endif %}
+  </nav>
+</header>
+<main class="page-shell">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash flash-{{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="footer"><span>© 2026 HackMart</span><span>Built for security training · Local CTF environment</span></footer>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
